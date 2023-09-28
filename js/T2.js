@@ -33,7 +33,7 @@ function Loop()
 
 function Turn()
 {
-    pos = prompt("turn of " + currTurn + ": ").split(' ').map(Number);
+    pos = prompt("turn of " + currTurn + ": ").split(' ').map(c => Number(c) - 1).reverse();
 
     // validate user input
     if (pos[0] < 0 || pos[1] < 0) return false;
