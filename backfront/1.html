@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html> 
+   <head> 
+       <meta charset="UTF-8"> 
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head> 
+   <body> 
+
+    <h1>None</h1>
+    <div class=""> 
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+    </div>
+
+    <br>
+
+    <h1>Flex</h1>
+    <div class="flex"> 
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+    </div>
+
+    <br>
+
+    <h1>Grid</h1>
+    <div class="grid"> 
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+      </div>
+   </body> 
+
+   <br>
+
+   <h1>Image</h1>
+   <img src="https://www.games-workshop.com/resources/catalog/product/threeSixty/99120108015_ArmigerHelverins360/01-01.jpg">
+</html>
+
+<style>
+    /* 2 */
+    h1 { 
+        font-size: 36px; 
+    } 
+    @media screen and (max-width: 599px) { 
+        h1 { 
+            font-size: 24px;
+        } 
+    }
+
+    
+    /* 3 */
+    .flex { 
+        display: flex; 
+    } 
+    .flex button {
+        flex:  0 1 50%;
+        font-size: 14px;
+    }
+
+
+    /* 4 */
+    .grid { 
+        display: grid; 
+        grid-template-columns: 1fr 2fr 1fr; 
+    } 
+
+
+    /* 5 */
+    img { 
+        width: 100%; 
+        height: auto; 
+    }
+
+</style>
