@@ -1,5 +1,5 @@
 solve = (data) => {
-    return data.split('').reverse().map(Number);
+    return '[' + data.split('').reverse().map(Number).join(', ') + ']';
 };
 
 
