@@ -30,6 +30,7 @@ function scale(__value) { myPoint.translate(__value); }
 
 
 solve = (data) => {
+    data = data.split(' ');
 };
 
 
