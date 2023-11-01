@@ -1,5 +1,17 @@
+
 solve = (data) => {
-    return Float64Array(Number.EPSILON) + Float64Array(data);
+    data = Number(data);
+
+    const buffer = new ArrayBuffer(8);
+    intView = new Int32Array(buffer); 
+    floatView = new Float64Array(buffer);
+    floatView[0] = data;
+
+    if (intView[0] > 0)
+        intView[0] ++;
+    else intView[1] ++;
+        
+    return floatView[0];
 };
 
 

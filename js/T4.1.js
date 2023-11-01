@@ -1,7 +1,7 @@
+
 solve = (data) => {
-    data = data.split('.')[1];
-    
-    return -data.length;
+    data = Math.log10(Number(data))
+    return data > 0? Math.ceil(data) : Math.floor(data);
 };
 
 
