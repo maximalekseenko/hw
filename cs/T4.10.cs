@@ -11,7 +11,7 @@ public class HelloWorld
     }
     public static void Main(string[] args)
     {
-        // ---------- variables ---------- cs/T4.6.cs
+        // ---------- variables ----------
         List<Applicant> _inputArray = new List<Applicant>
         {
             new Applicant { 
