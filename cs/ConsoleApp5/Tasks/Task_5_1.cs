@@ -14,19 +14,32 @@ namespace Program.Tasks
             #endregion get data
 
             #region process data 
-                var _output = ARRAY_C.GroupBy(
+                var _output = 
+
+                #region make data
+                    ARRAY_C.GroupBy(
                         _itemC => _itemC.shop_name
                     ).Select( // get max discount
-                        _groupC_by_shop_name => _groupC_by_shop_name.OrderBy(
-                            _itemC => _itemC.discount
-                        ).ThenBy(
-                            _itemC => _itemC.consumer_key
-                        ).Last()
-                    ).OrderBy( // final sort
+                        _groupC_by_shop_name => _groupC_by_shop_name.MaxBy(
+                            _itemC => Tuple.Create(_itemC.discount, _itemC.consumer_key)
+                        )
+                #endregion make data
+
+                #region sort data
+                    ).OrderBy( // sort
                         _itemC => _itemC.shop_name
-                    ).Select( // format for output
-                        _itemC => $"{_itemC.shop_name}\t{_itemC.consumer_key}\t{ARRAY_A.Single(_itemA => _itemA.consumer_key == _itemC.consumer_key).birth_year}\t{_itemC.discount}"
+                #endregion sort data
+                
+                #region format output
+                    ).Select( // format output
+                        _itemC => $"{ _itemC.shop_name
+                                 }\t{ _itemC.consumer_key
+                                 }\t{ ARRAY_A.FirstOrDefault(
+                                        _itemA => _itemA.consumer_key == _itemC.consumer_key
+                                    , new A()).birth_year
+                                 }\t{ _itemC.discount}"
                     );
+                #endregion format output
             #endregion process data
 
             #region output 

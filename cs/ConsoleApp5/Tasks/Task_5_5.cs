@@ -15,53 +15,62 @@ namespace Program.Tasks
             #endregion get data 
 
             #region process data 
-                var _output = ARRAY_A.GroupBy(
-                    _itemA => _itemA.birth_year
-                ).Select( // make output object
-                    _groupA_by_birth_year => new {
-                        birth_year = _groupA_by_birth_year.First().birth_year,
+                var _output = 
 
-                        country_of_max_prod = ARRAY_B.GroupBy(
-                                _itemB => _itemB.manufacture_country
-                            ).Select( // B where 
-                                _groupB_by_manufacture_country => _groupB_by_manufacture_country.Where(
-                                    _itemB => ARRAY_E.Where( // E (having consumer_key in A),
-                                        _itemE => ARRAY_A.Select(
-                                            _itemA => _itemA.consumer_key
-                                        ).ToArray().Contains(_itemE.consumer_key)
-                                    ).Select( // contains B's vendor_code
-                                        _itemE => _itemE.vendor_code
-                                    ).Contains(_itemB.vendor_code)
+                #region make data
+                    ARRAY_A.GroupBy(
+                        _itemA => _itemA.birth_year
+                    ).Select( // make output object
+                        _groupA_by_birth_year => new {
+                            birth_year = _groupA_by_birth_year.FirstOrDefault(new A()).birth_year,
+
+                            country_of_max_prod = ARRAY_B.GroupBy(
+                                    _itemB => _itemB.manufacture_country
+                                ).Select(
+                                    _groupB_by_manufacture_country => _groupB_by_manufacture_country.Where(
+                                        _itemB => ARRAY_E.Any(
+                                            _itemE => _groupA_by_birth_year.Any(
+                                                    _itemA => _itemA.consumer_key == _itemE.consumer_key
+                                                ) && _itemE.vendor_code == _itemB.vendor_code
+                                        )
+                                    )
+                                ).MaxBy(
+                                    _groupB_by_manufacture_country => _groupB_by_manufacture_country.Count()
+                                ).FirstOrDefault(new B()).manufacture_country,
+
+                            amount_of_max_prod = ARRAY_B.GroupBy(
+                                    _itemB => _itemB.manufacture_country
+                                ).Select( 
+                                    _groupB_by_manufacture_country => _groupB_by_manufacture_country.Where(
+                                        _itemB => ARRAY_E.Any(
+                                            _itemE => _groupA_by_birth_year.Any(
+                                                    _itemA => _itemA.consumer_key == _itemE.consumer_key
+                                                ) && _itemE.vendor_code == _itemB.vendor_code
+                                        )
+                                    )
+                                ).Max(
+                                    _groupB_by_manufacture_country => _groupB_by_manufacture_country.Count()
                                 )
-                            ).OrderBy(
-                                _groupB_by_manufacture_country => _groupB_by_manufacture_country.ToArray().Length
-                            ).First().First().manufacture_country,
+                        }
+                #endregion make data
 
-                        amount_of_max_prod = ARRAY_B.GroupBy(
-                                _itemB => _itemB.manufacture_country
-                            ).Select( // B where 
-                                _groupB_by_manufacture_country => _groupB_by_manufacture_country.Where(
-                                    _itemB => ARRAY_E.Where( // E (having consumer_key in A),
-                                        _itemE => ARRAY_A.Select(
-                                            _itemA => _itemA.consumer_key
-                                        ).ToArray().Contains(_itemE.consumer_key)
-                                    ).Select( // contains B's vendor_code
-                                        _itemE => _itemE.vendor_code
-                                    ).Contains(_itemB.vendor_code)
-                                ).ToArray().Length
-                            ).OrderBy(
-                                _length => _length
-                            ).First()
-                    }
-                ).OrderBy( // Sort
-                    _item => _item.birth_year
-                ).ThenBy(
-                    _item => _item.country_of_max_prod
-                ).ThenBy(
-                    _item => _item.amount_of_max_prod
-                ).Select( // format
-                    _item => $"{_item.birth_year}\t{_item.country_of_max_prod}\t{_item.amount_of_max_prod}"
-                );
+                #region sort data
+                    ).OrderBy(
+                        _item => _item.birth_year
+                    ).ThenBy(
+                        _item => _item.country_of_max_prod
+                    ).ThenBy(
+                        _item => _item.amount_of_max_prod
+                #endregion sort data
+                
+                #region format output
+                    ).Select( 
+                        _item => $"{_item.birth_year
+                                }\t{_item.country_of_max_prod
+                                }\t{_item.amount_of_max_prod
+                                }"
+                    );
+                #endregion format output
             #endregion process data 
 
             #region output

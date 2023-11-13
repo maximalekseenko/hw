@@ -16,37 +16,56 @@ namespace Program.Tasks
             #endregion get data 
 
             #region process data 
-                var _output = ARRAY_A.GroupBy(
-                    _itemA => _itemA.residence_street
-                ).SelectMany(
-                    _groupA_by_residence_street => ARRAY_E.GroupBy(
-                        _itemE => _itemE.vendor_code
-                    ).Select(
-                        _groupE_by_vendor_code => new {
-                                vendor_code=_groupE_by_vendor_code.First().vendor_code,
-                                residence_street=_groupA_by_residence_street.First().residence_street,
-                                sum_discount=_groupE_by_vendor_code.Select(
+                var _output = 
+
+                #region make data
+                    ARRAY_A.GroupBy(
+                        _itemA => _itemA.residence_street
+                    ).SelectMany(
+                        _groupA_by_residence_street => ARRAY_E.GroupBy(
+                            _itemE => _itemE.vendor_code
+                        ).Select(
+                            _groupE_by_vendor_code => new {
+                                vendor_code=_groupE_by_vendor_code.FirstOrDefault(new E()).vendor_code,
+                                
+                                residence_street=_groupA_by_residence_street.FirstOrDefault(new A()).residence_street,
+                                
+                                sum_discount=_groupE_by_vendor_code.Sum(
                                     _itemE => Math.Round(
-                                            ARRAY_D.Where(
-                                                    _itemD => (_itemD.vendor_code == _itemE.vendor_code) && (_itemD.shop_name == _itemE.shop_name)
-                                                ).FirstOrDefault().cost
+                                            ARRAY_D.FirstOrDefault(
+                                                    _itemD => (_itemD.vendor_code == _itemE.vendor_code) 
+                                                           && (_itemD.shop_name == _itemE.shop_name),
+                                                    new D()
+                                                ).cost
                                             * 
-                                            ARRAY_C.Where(
-                                                    _itemC => (_itemC.consumer_key == _itemE.consumer_key) && (_itemC.shop_name == _itemE.shop_name)
-                                                ).FirstOrDefault().discount
+                                            ARRAY_C.FirstOrDefault(
+                                                    _itemC => (_itemC.consumer_key == _itemE.consumer_key) 
+                                                           && (_itemC.shop_name == _itemE.shop_name),
+                                                    new C()
+                                                ).discount
                                             )
-                                ).Sum()
+                                )
                             }
-                    )
-                ).OrderBy( // Sort
-                    _item => _item.vendor_code
-                ).ThenBy(
-                    _item => _item.residence_street
-                ).ThenBy(
-                    _item => _item.sum_discount
-                ).Select( // format
-                    _item => $"{_item.vendor_code}\t{_item.residence_street}\t{_item.sum_discount}"
-                );
+                        )
+                #endregion make data
+
+                #region sort data
+                    ).OrderBy( // Sort
+                        _item => _item.vendor_code
+                    ).ThenBy(
+                        _item => _item.residence_street
+                    ).ThenBy(
+                        _item => _item.sum_discount
+                #endregion sort data
+                
+                #region format output
+                    ).Select( // format
+                        _item => $"{_item.vendor_code
+                                }\t{_item.residence_street
+                                }\t{_item.sum_discount
+                                }"
+                    );
+                #endregion format output
             #endregion process data 
 
             #region output

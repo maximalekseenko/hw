@@ -14,29 +14,47 @@ namespace Program.Tasks
             #endregion get data 
 
             #region process data 
-                var _output = ARRAY_B.GroupBy(
-                    _itemB => _itemB.category
-                ).Select( // get output data
-                    _groupB_by_category => new {
-                        category=_groupB_by_category.First().category,
+                var _output = 
 
-                        shop_amount=ARRAY_D.GroupBy(
-                                _itemD => _itemD.shop_name
-                            ).Where( // get amount of shops where such category is sold
-                                _groupD_by_shop_name => _groupD_by_shop_name.Select(
-                                    _itemD => _itemD.vendor_code
-                                ).ToArray().Intersect(
-                                    ARRAY_B.Select(
-                                        _itemB => _itemB.vendor_code
-                                    )
-                                ).ToArray().Length != 0
-                            ).ToArray().Length,
+                #region make data
+                    ARRAY_B.GroupBy(
+                        _itemB => _itemB.category
+                    ).Select( // get output data
+                        _groupB_by_category => new {
 
-                        country_amount=_groupB_by_category.ToArray().Length
-                    }
-                ).Select( // make output
-                    _item => $"{_item.category} {_item.shop_amount} {_item.country_amount}"
-                );
+                            shop_amount=ARRAY_D.GroupBy(
+                                    _itemD => _itemD.shop_name
+                                ).Count( // get amount of shops where such category is sold
+                                    _groupD_by_shop_name => _groupD_by_shop_name.Count(
+                                        _itemD => ARRAY_B.Any(
+                                            _itemB => _itemB.vendor_code == _itemD.vendor_code
+                                        )
+                                    ) != 0
+                                ),
+
+                            category=(_groupB_by_category.FirstOrDefault(new B())).category,
+
+                            country_amount=_groupB_by_category.Count()
+                        }
+                #endregion make data
+
+                #region sort data
+                    ).OrderBy(
+                        _item => _item.shop_amount
+                    ).ThenBy(
+                        _item => _item.category
+                    ).ThenBy(
+                        _item => _item.country_amount
+                #endregion sort data
+                
+                #region format output
+                    ).Select(
+                        _item => $"{_item.shop_amount
+                                }\t{_item.category
+                                }\t{_item.country_amount
+                                }"
+                    );
+                #endregion format output
             #endregion process data 
 
             #region output
