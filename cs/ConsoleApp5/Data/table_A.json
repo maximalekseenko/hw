@@ -1,0 +1,7 @@
+[
+    { "consumer_key": 4, "birth_year":2001, "residence_street":"Street№2" },
+    { "consumer_key": 3, "birth_year":2001, "residence_street":"Street№2" },
+    { "consumer_key": 0, "birth_year":2002, "residence_street":"Street№1" },
+    { "consumer_key": 2, "birth_year":2002, "residence_street":"Street№2" },
+    { "consumer_key": 1, "birth_year":2001, "residence_street":"Street№1" }
+]

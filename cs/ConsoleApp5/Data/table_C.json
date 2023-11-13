@@ -1,0 +1,17 @@
+[
+    { "consumer_key":3, "shop_name":"Shop№2", "discount":0.01 },
+    { "consumer_key":1, "shop_name":"Shop№3", "discount":0.02 },
+    { "consumer_key":0, "shop_name":"Shop№2", "discount":0.01 },
+    { "consumer_key":4, "shop_name":"Shop№3", "discount":0.02 },
+    { "consumer_key":4, "shop_name":"Shop№2", "discount":0.02 },
+    { "consumer_key":3, "shop_name":"Shop№1", "discount":0.01 },
+    { "consumer_key":3, "shop_name":"Shop№3", "discount":0.02 },
+    { "consumer_key":0, "shop_name":"Shop№3", "discount":0.01 },
+    { "consumer_key":2, "shop_name":"Shop№3", "discount":0.03 },
+    { "consumer_key":4, "shop_name":"Shop№1", "discount":0.01 },
+    { "consumer_key":1, "shop_name":"Shop№1", "discount":0.02 },
+    { "consumer_key":2, "shop_name":"Shop№2", "discount":0.02 },
+    { "consumer_key":2, "shop_name":"Shop№1", "discount":0.02 },
+    { "consumer_key":0, "shop_name":"Shop№1", "discount":0.01 },
+    { "consumer_key":1, "shop_name":"Shop№2", "discount":0.02 }
+]

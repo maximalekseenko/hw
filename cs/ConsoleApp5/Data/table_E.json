@@ -1,0 +1,12 @@
+[
+    {"consumer_key": 0, "vendor_code": 1, "shop_name":"Shop№1"},
+    {"consumer_key": 1, "vendor_code": 0, "shop_name":"Shop№1"},
+    {"consumer_key": 1, "vendor_code": 6, "shop_name":"Shop№3"},
+    {"consumer_key": 3, "vendor_code": 4, "shop_name":"Shop№3"},
+    {"consumer_key": 3, "vendor_code": 7, "shop_name":"Shop№2"},
+    {"consumer_key": 1, "vendor_code": 1, "shop_name":"Shop№1"},
+    {"consumer_key": 1, "vendor_code": 5, "shop_name":"Shop№2"},
+    {"consumer_key": 4, "vendor_code": 5, "shop_name":"Shop№2"},
+    {"consumer_key": 4, "vendor_code": 4, "shop_name":"Shop№2"},
+    {"consumer_key": 3, "vendor_code": 7, "shop_name":"Shop№3"}
+]
