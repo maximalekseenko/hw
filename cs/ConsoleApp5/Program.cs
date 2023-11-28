@@ -7,7 +7,7 @@ namespace Program
 
         public static void Main(string[] args)
         {
-            TaskRunner.Run(args[0]);
+            TaskRunner.Run(args[0], args.Skip(1).ToArray());
         }
     }
 }

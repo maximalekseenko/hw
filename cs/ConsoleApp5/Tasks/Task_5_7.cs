@@ -6,7 +6,7 @@ using Program.Models.Tables;
 namespace Program.Tasks
 {
     internal class Task_5_7 {
-        public static void Run(){
+        public static void Run(string[] args){
 
             #region get data                 
                 var ARRAY_A = TableReader.AccessTable<A>("table_A");
