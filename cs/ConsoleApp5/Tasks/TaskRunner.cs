@@ -32,6 +32,9 @@ namespace Program.Tasks
                 case "6.1":
                     Task_6_1.Run(args);
                     break;
+                case "6.2":
+                    Task_6_2.Run(args);
+                    break;
                 default:
                     Console.WriteLine($"Task \"{taskName}\" not found");
                     break;
