@@ -13,9 +13,9 @@ class Human {
   
 
 solve = (data) => {
-    human1 = new Human("1", "A");
-    human2 = new Human("1", "B");
-    human3 = new Human("2", "B");
+    human1 = new Human("Ivan", "Ivanov");
+    human2 = new Human("Ivan", "Petrov");
+    human3 = new Human("Petr", "Ivanov");
 
     return "1 > 2 : " + human1.comp(human2) +
          "\n2 > 3 : " + human2.comp(human3) +

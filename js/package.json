@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@types/jquery": "^3.5.29",
+    "axios": "^1.6.2",
+    "jquery": "^3.7.1",
     "prompt-sync": "^4.2.0"
   }
 }

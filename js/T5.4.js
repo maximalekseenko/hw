@@ -20,7 +20,7 @@ String.prototype.toUnicode = function(){
 
 function IsCombi(_char)
 {
-    return _char.toUnicode().match(/\u/g || ['']).length > 1
+    return _char.toUnicode().match(/\u/g || []).length > 1
 }
 
 
