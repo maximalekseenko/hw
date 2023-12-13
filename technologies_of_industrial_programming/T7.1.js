@@ -3,4 +3,4 @@ import { funB, funC } from "./T7.1.mjs";
 
 funA();
 funB(42);
-funC();
+funC(1, 2);
