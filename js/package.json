@@ -4,5 +4,6 @@
     "axios": "^1.6.2",
     "jquery": "^3.7.1",
     "prompt-sync": "^4.2.0"
-  }
+  },
+  "type": "module"
 }
