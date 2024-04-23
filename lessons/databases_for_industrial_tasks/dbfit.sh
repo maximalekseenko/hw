@@ -1,6 +1,9 @@
 DB_NAME=DBfIT
 
 
+PSQL_RUN_COMMAND="psql --quiet -d ${DB_NAME} -c"
+
+
 # drop db if exists
 dropdb -f ${DB_NAME} --if-exists
 
@@ -9,151 +12,144 @@ createdb ${DB_NAME}
 
 # make tables
 # ---------- Тип ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS type (
+${PSQL_RUN_COMMAND} "CREATE TABLE type (
     key SERIAL PRIMARY KEY,
     name VARCHAR
 );"
 
 # ---------- Районы ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS districts (
+${PSQL_RUN_COMMAND} "CREATE TABLE district (
     key SERIAL PRIMARY KEY,
     name VARCHAR
 );"
 
 # ---------- Материалы здания ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS material (
+${PSQL_RUN_COMMAND} "CREATE TABLE material (
     key SERIAL PRIMARY KEY,
     name VARCHAR
 );"
 
 # ---------- Объект недвижимости ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS building (
+${PSQL_RUN_COMMAND} "CREATE TABLE building (
     key SERIAL PRIMARY KEY,
-    district BIGINT,
-    adress VARCHAR,
-    level BIGINT,
-    rooms BIGINT,
-    type BIGINT,
-    status BIGINT,
-    price BIGINT,
-    descriprtion TEXT,
-    material BIGINT,
-    square BIGINT,
+    district_key INTEGER,
+    address VARCHAR,
+    level INTEGER,
+    rooms INTEGER,
+    type INTEGER,
+    status INTEGER,
+    price INTEGER,
+    description TEXT,
+    material_key INTEGER,
+    square INTEGER,
     date TIMESTAMP
 );"
 
 # ---------- Критерии оценки ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS criteria (
+${PSQL_RUN_COMMAND} "CREATE TABLE criteria (
     key SERIAL PRIMARY KEY,
     name VARCHAR
 );"
 
 # ---------- Оценки ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS ratings (
+${PSQL_RUN_COMMAND} "CREATE TABLE rating (
     key SERIAL PRIMARY KEY,
-    building BIGINT,
+    building_key INTEGER,
     date TIMESTAMP,
-    criteria BIGINT,
+    criteria_key INTEGER,
     mark DOUBLE PRECISION
 );"
 
 # ---------- Риэлтор ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS realtor (
+${PSQL_RUN_COMMAND} "CREATE TABLE realtor (
     key SERIAL PRIMARY KEY,
     surname VARCHAR,
+    name VARCHAR,
     patronymic VARCHAR,
     phone VARCHAR
 );"
 
 # ---------- Продажа ----------
-psql -d ${DB_NAME} -c "CREATE TABLE IF NOT EXISTS sell (
+${PSQL_RUN_COMMAND} "CREATE TABLE sell (
     key SERIAL PRIMARY KEY,
-    building BIGINT,
+    building_key INTEGER,
     date TIMESTAMP,
-    realtor BIGINT,
+    realtor_key INTEGER,
     cost DOUBLE PRECISION
 );"
 
-# fill tables
-# ---------- Тип ----------
-psql -d ${DB_NAME} -c "INSERT INTO type (name) VALUES ('type№1');"
-psql -d ${DB_NAME} -c "INSERT INTO type (name) VALUES ('type№2');"
-psql -d ${DB_NAME} -c "INSERT INTO type (name) VALUES ('type№3');"
-# ---------- Районы ----------
-psql -d ${DB_NAME} -c "INSERT INTO districts (name) VALUES ('district№1');"
-psql -d ${DB_NAME} -c "INSERT INTO districts (name) VALUES ('district№2');"
-psql -d ${DB_NAME} -c "INSERT INTO districts (name) VALUES ('district№3');"
-psql -d ${DB_NAME} -c "INSERT INTO districts (name) VALUES ('district№4');"
-# ---------- Материалы здания ----------
-psql -d ${DB_NAME} -c "INSERT INTO material (name) VALUES ('material№1');"
-psql -d ${DB_NAME} -c "INSERT INTO material (name) VALUES ('material№2');"
-# ---------- Объект недвижимости ----------
-    #                                                                                                                                            district, adress,    level, rooms, type, status, price, descriprtion,  material, square, date
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№1',  1,     1,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№2',  4,     2,     2,    1,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№3',  2,     3,     1,    0,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№4',  6,     4,     2,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№5',  3,     1,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№6',  2,     2,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№7',  2,     3,     1,    1,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№8',  7,     4,     0,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№9',  9,     1,     2,    1,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№10', 7,     2,     0,    0,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№11', 3,     3,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№12', 8,     4,     0,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 0,       'adress№13', 1,     1,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№14', 5,     2,     2,    0,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№15', 2,     3,     0,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№16', 7,     4,     0,    0,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№17', 3,     5,     1,    0,      20000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№18', 9,     1,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№19', 3,     2,     0,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№20', 6,     4,     1,    0,      30000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№21', 2,     2,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№22', 6,     4,     1,    0,      30000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№23', 2,     2,     0,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№24', 8,     1,     1,    0,      40000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№25', 6,     2,     2,    0,      40000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 1,       'adress№26', 7,     3,     1,    1,      40000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№27', 4,     2,     0,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№28', 1,     2,     1,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№29', 5,     1,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№30', 8,     4,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№31', 9,     2,     0,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№32', 5,     3,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№33', 3,     1,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№34', 7,     2,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№35', 6,     2,     0,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№36', 2,     1,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№37', 8,     1,     2,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№38', 3,     4,     0,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 2,       'adress№39', 8,     2,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№40', 3,     2,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№41', 5,     1,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№42', 7,     5,     1,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№43', 8,     1,     0,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№44', 1,     9,     2,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№45', 6,     2,     1,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№46', 4,     1,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№47', 3,     4,     0,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№48', 7,     3,     1,    1,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№49', 7,     2,     2,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-psql -d ${DB_NAME} -c "INSERT INTO building (district, adress, level, rooms, type, status, price, descriprtion, material, square, date) VALUES ( 3,       'adress№50', 8,     1,     0,    0,      10000, 'BlaBlaBla№1', 0,        100,    '2004-10-19 10:23:54');"
-# ---------- Критерии оценки ----------
-psql -d ${DB_NAME} -c "INSERT INTO criteria (name) VALUES ('type№${i}');"
-# ---------- Оценки ----------
-psql -d ${DB_NAME} -c "INSERT INTO ratings (name) VALUES ('type№${i}');"
-# ---------- Риэлтор ----------
-psql -d ${DB_NAME} -c "INSERT INTO realtor (name) VALUES ('type№${i}');"
-# ---------- Продажа ----------
-psql -d ${DB_NAME} -c "INSERT INTO sell (name) VALUES ('type№${i}');"
+# fill table
+python3 makedbdata.py ${PSQL_RUN_COMMAND}
+
+
+
+# forien keys
+${PSQL_RUN_COMMAND} "ALTER TABLE building ADD FOREIGN KEY (district_key) REFERENCES district;"
+${PSQL_RUN_COMMAND} "ALTER TABLE building ADD FOREIGN KEY (material_key) REFERENCES material;"
+${PSQL_RUN_COMMAND} "ALTER TABLE rating ADD FOREIGN KEY (building_key) REFERENCES building;"
+${PSQL_RUN_COMMAND} "ALTER TABLE rating ADD FOREIGN KEY (criteria_key) REFERENCES criteria;"
+${PSQL_RUN_COMMAND} "ALTER TABLE sell ADD FOREIGN KEY (building_key) REFERENCES building;"
+${PSQL_RUN_COMMAND} "ALTER TABLE sell ADD FOREIGN KEY (realtor_key) REFERENCES realtor;"
+
+# limit values
+${PSQL_RUN_COMMAND} "ALTER TABLE building ADD CONSTRAINT building_status_check CHECK (status in (0, 1));"
+
+# change type
+${PSQL_RUN_COMMAND} "ALTER TABLE building ALTER COLUMN square TYPE REAL;"
+${PSQL_RUN_COMMAND} "ALTER TABLE building ALTER COLUMN price TYPE REAL;"
+
+# set default
+${PSQL_RUN_COMMAND} "ALTER TABLE building ALTER COLUMN date SET DEFAULT NOW();"
+
+# add colunms
+${PSQL_RUN_COMMAND} "ALTER TABLE building ADD class VARCHAR CHECK (class in ('эконом', 'комфорт', 'бизнес')) DEFAULT 'эконом';"
+
+# remove colunms
+${PSQL_RUN_COMMAND} "ALTER TABLE building DROP description;"
+
+# add tables
+${PSQL_RUN_COMMAND} "CREATE TABLE room_type (
+    key SERIAL PRIMARY KEY
+);"
+${PSQL_RUN_COMMAND} "CREATE TABLE building_structure (
+    key SERIAL PRIMARY KEY,
+    district_key INTEGER REFERENCES building,
+    room_type_key INTEGER REFERENCES room_type,
+    square INTEGER CHECK (square > 0)
+);"
+
+# В таблицу «Продажа» добавьте столбец «Комиссия риэлтору», тип – вещественный.
+${PSQL_RUN_COMMAND} "ALTER TABLE sell ADD realtor_commision REAL"
+
+# Для созданного столбца в п.8. добавьте значение по умолчанию – 10
+${PSQL_RUN_COMMAND} "ALTER TABLE sell ALTER COLUMN realtor_commision SET DEFAULT 10;"
+
+# Для столбца «Код объекта» в таблице «Продажи» добавьте ограничение уникальности
+${PSQL_RUN_COMMAND} "ALTER TABLE sell ADD CONSTRAINT building_key_unique UNIQUE(building_key);"
+
+# Настроить ссылочную целостность таким образом, чтобы при удалении риэлтора, в таблице «Продажи» столбцу «Код риэлтора» присваивалось значение «null»
+${PSQL_RUN_COMMAND} "ALTER TABLE sell DROP CONSTRAINT sell_realtor_key_fkey;"
+${PSQL_RUN_COMMAND} "ALTER TABLE sell ADD FOREIGN KEY (realtor_key) REFERENCES realtor ON DELETE SET NULL;"
+
+# В таблице «Оценки» добавить ограничение столбца «Оценка»: от 0 до 10.
+${PSQL_RUN_COMMAND} "ALTER TABLE rating ADD CONSTRAINT rating_mark_check CHECK (mark BETWEEN 0 AND 10);"
+
+# Настроить ссылочную целостность таким образом, чтобы при удалении критерия оценки, в таблице «Оценки» столбцу «Код критерия» присваивалось значение по умолчанию (определить самостоятельно).
+${PSQL_RUN_COMMAND} "ALTER TABLE rating DROP CONSTRAINT rating_criteria_key_fkey;"
+${PSQL_RUN_COMMAND} "ALTER TABLE rating ADD FOREIGN KEY (criteria_key) REFERENCES criteria ON DELETE SET NULL;"
+
+# Добавить ограничение уникальности на комбинацию Фамилия, Имя, Отчество в таблице «Риэлтор»
+${PSQL_RUN_COMMAND} "ALTER TABLE realtor ADD CONSTRAINT realtor_surname_name_patronymic_unique UNIQUE(surname, name, patronymic);"
+
 
 # print tabels
-psql -d ${DB_NAME} -c "SELECT * FROM type;"
-psql -d ${DB_NAME} -c "SELECT * FROM districts;"
-psql -d ${DB_NAME} -c "SELECT * FROM material;"
-psql -d ${DB_NAME} -c "SELECT * FROM building;"
-psql -d ${DB_NAME} -c "SELECT * FROM criteria;"
-psql -d ${DB_NAME} -c "SELECT * FROM ratings;"
-psql -d ${DB_NAME} -c "SELECT * FROM realtor;"
-psql -d ${DB_NAME} -c "SELECT * FROM sell;"
+${PSQL_RUN_COMMAND} "SELECT * FROM type;"
+${PSQL_RUN_COMMAND} "SELECT * FROM district;"
+${PSQL_RUN_COMMAND} "SELECT * FROM material;"
+${PSQL_RUN_COMMAND} "SELECT * FROM building;"
+${PSQL_RUN_COMMAND} "SELECT * FROM criteria;"
+${PSQL_RUN_COMMAND} "SELECT * FROM rating;"
+${PSQL_RUN_COMMAND} "SELECT * FROM realtor;"
+${PSQL_RUN_COMMAND} "SELECT * FROM sell;"
+${PSQL_RUN_COMMAND} "SELECT * FROM room_type;"
+${PSQL_RUN_COMMAND} "SELECT * FROM building_structure;"
