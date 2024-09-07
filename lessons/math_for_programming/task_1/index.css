@@ -1,0 +1,18 @@
+#game-ball {
+    position: absolute;
+}
+#game-borders {
+    position: relative;
+    border: 1px dashed red;
+
+    overflow:hidden;
+    resize: both;
+}
+
+#game-button {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+
+    border: 1px solid gray;
+    background-color: darkgray;
+}
