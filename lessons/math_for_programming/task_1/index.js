@@ -78,8 +78,9 @@ function Initialize() {
     UpdateGameArea();
 }
 
-async function StartGameLoop() {
-    isRunning = true;
+async function ToggleGameLoop() {
+    Initialize();
+    isRunning = !isRunning;
     while (isRunning) {
         await new Promise(resolve => setTimeout(resolve, BALL_STEP_WAIT_MS));
         ballPositionX += H_SPEED * (isHMovePositive ? 1 : -1);
@@ -87,11 +88,10 @@ async function StartGameLoop() {
 
         UpdateBallPosition();
     }
-}
 
-function GameBegin() {
-    Initialize();
-    StartGameLoop();
+    ballPositionX = BALL_START_X;
+    ballPositionY = BALL_START_Y;
+    UpdateBallPosition();
 }
 
 function GameRescale() {
