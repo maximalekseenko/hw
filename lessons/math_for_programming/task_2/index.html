@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <div id="game-borders" onmousemove="GAME.SetBorder(parseInt(this.style.width, 10), parseInt(this.style.height, 10));" style="width: 300px; height: 200px;">
+        <img class="game-object" id="game-ball" src="./ball.svg" style="height: 0;"/>
+        <img class="game-object" id="game-ball2" src="./ball2.svg" style="height: 0;"/>
+    </div>
+    <div id="game-buttons">
+        <button class="game-button" onclick="GAME.isPaused = !GAME.isPaused;">BEGIN</button>
+        <button class="game-button" onclick="GAME.balls_collision = !GAME.balls_collision">TOGGLE BALLS COLLISION</button>
+    </div>
+    <script src="./index.js"></script>
+</body>
+
+</html>
