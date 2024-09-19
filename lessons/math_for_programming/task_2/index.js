@@ -2,27 +2,41 @@ class BoxCollider {
     constructor(x = 0, y = 0, w = 0, h = 0) {
         /**
          * @type {number}
-         * @private
+         * @protected
          */
-        this.x = x;
+        this._left;
 
         /**
          * @type {number}
-         * @private
+         * @protected
          */
-        this.y = y;
+        this._top;
 
         /**
          * @type {number}
-         * @private
+         * @protected
          */
-        this.w = w;
+        this._width;
 
         /**
          * @type {number}
-         * @private
+         * @protected
          */
-        this.h = h;
+        this._height;
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._right;
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._bottom;
+
+        this.Update(x, y, w, h);
     }
 
     /**
@@ -34,34 +48,49 @@ class BoxCollider {
      */
     Update(newX = undefined, newY = undefined, newW = undefined, newH = undefined) {
         if (newX != undefined)
-            this.x = newX;
+            this._left = newX;
         if (newY != undefined)
-            this.y = newY;
+            this._top = newY;
         if (newW != undefined)
-            this.w = newW;
+            this._width = newW;
         if (newH != undefined)
-            this.h = newH;
+            this._height = newH;
+
+        if (newX != undefined || newW != undefined)
+            this._right = this._left + this._width;
+        if (newY != undefined || newH != undefined)
+            this._bottom = this._top + this._height;
     }
 
-    /**
-     * 
+    /** Checks if this collider is inside another collider.
      * @param {BoxCollider} otherCollider 
      * @returns {boolean}
      */
-    DoCollideWith(otherCollider) {
-        return this.x + this.w >= otherCollider.x
-            && this.y + this.h >= otherCollider.y
-            && otherCollider.x + otherCollider.w >= this.x
-            && otherCollider.y + otherCollider.h >= this.y
+    DoCollide(otherCollider) {
+        return this._right >= otherCollider._left
+            && this._top <= otherCollider._bottom
+            && this._left <= otherCollider._right
+            && this._bottom >= otherCollider._top
     }
 
+    /**
+     * @param {BoxCollider} otherCollider 
+     * @returns {number?}
+     */
     GetCollisionSide(otherCollider) {
+        if (!this.DoCollide(otherCollider)) return undefined;
+
         return [
-            otherCollider.x + otherCollider.w - this.x,
-            this.y + this.h - otherCollider.y,
-            this.x + this.w - otherCollider.x,
-            otherCollider.y + otherCollider.h - this.y
-        ].reduce((r, v, i, a) => v >= a[r] ? r : i, -1);
+            Math.abs(this._left - otherCollider._right),
+            Math.abs(otherCollider._top - this._bottom),
+            Math.abs(otherCollider._left - this._right),
+            Math.abs(this._top - otherCollider._bottom),
+        ].reduce((
+            last_best_index, 
+            value, 
+            index, 
+            array
+        ) => value >= array[last_best_index] ? last_best_index : index, 5);
     }
 
     /**
@@ -79,20 +108,33 @@ class BoxCollider {
      * @returns {[number, number]?}
      */
     DeCollide(otherCollider) {
-        if (!this.DoCollideWith(otherCollider)) return undefined;
+        if (!this.DoCollide(otherCollider)) return undefined;
 
         let collisionSide = this.GetCollisionSide(otherCollider);
 
+        
         if (collisionSide == 0)
-            this.x = otherCollider.x + otherCollider.w;
+            this.Update(
+                otherCollider._right,
+                undefined
+            )
         else if (collisionSide == 1)
-            this.y = otherCollider.y - this.h;
+            this.Update(
+                undefined,
+                otherCollider._top - this._height
+            )
         else if (collisionSide == 2)
-            this.x = otherCollider.x - this.w;
+            this.Update(
+                otherCollider._left - this._width,
+                undefined
+            )
         else if (collisionSide == 3)
-            this.y = otherCollider.y + otherCollider.h;
-
-        return [this.x, this.y];
+            this.Update(
+                undefined,
+                otherCollider._bottom
+            )
+        
+        return [this._left, this._top];
     }
 }
 
@@ -100,10 +142,11 @@ class BallController {
 
     /**
      * 
-     * @param {HTMLImageElement} ballImage html element that this controller is attached to
+     * @param {HTMLImageElement=} ballImage html element that this controller is attached to
      */
-    constructor(ballImage = undefined, radius = 5, speed = 10, movementAngle = -Math.PI / 4) {
+    constructor(ballImage, radius = 5, positionX = 0, positionY = 0, speed = 10, movementAngle = -Math.PI / 4) {
         /**
+         * @readonly
          * @type {BoxCollider}
          */
         this.collider = new BoxCollider()
@@ -113,36 +156,44 @@ class BallController {
          * @type {HTMLImageElement}
          */
         this._ballImage;
-        this.AttachToImage(ballImage);
 
         /** Defines the radius of the ball.
          * @private
          * @type {number} 
          */
         this._radius;
-        this.SetRadius(radius);
 
         /** Defines how much pixels this ball moves per second. 
          * @type {number} 
          */
         this.speed = speed;
 
-        /** @type {number} */
-        this._positionX = 0;
-        /** @type {number} */
-        this._positionY = 0;
+        /** 
+         * @private
+         * @type {number} 
+         */
+        this._positionX;
+        /** 
+         * @private
+         * @type {number}
+         */
+        this._positionY;
 
         /** 
          * @private
          * @type {number} 
          */
         this._movementAngle;
-        this.SetMovementAngle(movementAngle);
 
+        // Set initial values
+        this.AttachToImage(ballImage);
+        this.SetRadius(radius);
+        this.SetPosition(positionX, positionY);
+        this.SetMovementAngle(movementAngle);
     }
 
     /** Sets or updates radius of the ball.
-     * @param {number} newRadius 
+     * @param {number?} newRadius 
      */
     SetRadius(newRadius) {
 
@@ -197,7 +248,10 @@ class BallController {
 
 
         // Update
-        if (this._ballImage != undefined) {
+        if (pointX != undefined
+            && pointY != undefined
+            && this._ballImage != undefined
+        ) {
             this._ballImage.style.left = this._positionX - this._radius + "px";
             this._ballImage.style.top = this._positionY - this._radius + "px";
             this.collider.Update(
@@ -224,58 +278,30 @@ class BallController {
             endpointY
         );
 
-        // Fix position
-        colliders.forEach(collider => {
-            // Cannot collide with self
-            if (this.collider === collider) return;
+    }
 
-            // Check for collision
-            if (!this.collider.DoCollideWith(collider)) return;
+    TryCollide(collider) {
+        // Cannot collide with self
+        if (this.collider === collider) return;
 
-            // Change direction
-            var collisionAngle = this.collider.GetCollisionAngle(collider);
-            this.SetMovementAngle(
-                Math.PI + collisionAngle - (this._movementAngle - collisionAngle)
-            );
+        // Check for collision
+        if (!this.collider.DoCollide(collider)) return;
 
-            // Fix collision
-            var fixed_collider_position = this.collider.DeCollide(collider);
-            this.SetPosition(
-                fixed_collider_position[0] + this._radius,
-                fixed_collider_position[1] + this._radius
-            );
-        })
+        // Change direction
+        var collisionAngle = this.collider.GetCollisionAngle(collider);
+        this.SetMovementAngle(
+            Math.PI + collisionAngle - (this._movementAngle - collisionAngle)
+        );
+
+        // Fix collision
+        var fixed_collider_position = this.collider.DeCollide(collider);
+        this.SetPosition(
+            fixed_collider_position[0] + this._radius,
+            fixed_collider_position[1] + this._radius
+        );
     }
 }
 
-function UpdateBallPosition() {
-    // fix position
-    //  left wall
-    if (ballPositionX <= 0) {
-        ballPositionX = 0;
-        isHMovePositive = !isHMovePositive;
-    }
-    //  right wall
-    if (ballPositionX >= gameAreaWidth) {
-        ballPositionX = gameAreaWidth;
-        isHMovePositive = !isHMovePositive;
-    }
-    //  top wall
-    if (ballPositionY <= 0) {
-        ballPositionY = 0;
-        isVMovePositive = !isVMovePositive;
-    }
-    //  bottom wall
-    if (ballPositionY >= gameAreaHeight) {
-        ballPositionY = gameAreaHeight;
-        isVMovePositive = !isVMovePositive;
-    }
-
-
-    // Update position visually
-    GAME_BALL.style.left = ballPositionX + "px";
-    GAME_BALL.style.top = ballPositionY + "px";
-}
 
 class Game {
     constructor(borderW = 300, borderH = 200) {
@@ -288,15 +314,74 @@ class Game {
         this.gameStepTime = 100;
 
         this.balls_collision = false;
-        
-        const BORDER_SIZE = 999;
+
+        const BORDER_EXTEND = 900;
         this._borderColliders = [
-            new BoxCollider(0, -BORDER_SIZE, this._borderWidth, BORDER_SIZE),
-            new BoxCollider(-BORDER_SIZE, 0, BORDER_SIZE, this._borderHeight),
-            new BoxCollider(0, this._borderHeight, this._borderWidth, BORDER_SIZE),
-            new BoxCollider(this._borderWidth, 0, BORDER_SIZE, this._borderHeight),
+            new BoxCollider(
+                -BORDER_EXTEND,
+                -BORDER_EXTEND,
+                BORDER_EXTEND,
+                BORDER_EXTEND * 2 + this._borderHeight
+            ),
+            new BoxCollider(
+                -BORDER_EXTEND,
+                -BORDER_EXTEND,
+                BORDER_EXTEND * 2 + this._borderWidth,
+                BORDER_EXTEND
+            ),
+            new BoxCollider(
+                this._borderWidth,
+                -BORDER_EXTEND,
+                BORDER_EXTEND,
+                BORDER_EXTEND * 2 + this._borderHeight
+            ),
+            new BoxCollider(
+                -BORDER_EXTEND,
+                this._borderHeight,
+                BORDER_EXTEND * 2 + this._borderWidth,
+                BORDER_EXTEND
+            ),
         ];
+        /**
+         * @type {Array.<BallController>}
+         */
+        this._balls = [];
     }
+
+    AddBall(
+        colorRotation,
+        radius, positionX, positionY,
+        speed, movementAngle
+    ) {
+        // Set random values
+        if (colorRotation == undefined)
+            colorRotation = Math.random() * 360;
+
+        if (radius == undefined)
+            radius = 5 + Math.random() * 20;
+
+        if (positionX == undefined)
+            positionX = Math.random() * this._borderWidth;
+
+        if (positionY == undefined)
+            positionY = Math.random() * this._borderHeight;
+
+        if (speed == undefined)
+            speed = 5 + Math.random() * 10;
+
+        if (movementAngle == undefined)
+            movementAngle = Math.random() * Math.PI * 2;
+
+
+        // Make and add new ball
+        this._balls.push(
+            new BallController(
+                MakeBall(colorRotation),
+                radius, positionX, positionY,
+                speed, movementAngle
+            )
+        );
+    };
 
 
     SetBorder(newBorderW, newBorderH) {
@@ -304,39 +389,28 @@ class Game {
         this._borderHeight = newBorderH;
 
         if (this._borderColliders != undefined) {
-            this._borderColliders[0].Update(undefined, undefined, this._borderWidth, undefined);
-            this._borderColliders[1].Update(undefined, undefined, undefined, this._borderHeight);
-            this._borderColliders[2].Update(undefined, this._borderHeight, this._borderWidth, undefined);
-            this._borderColliders[3].Update(this._borderWidth, undefined, this._borderHeight);
+            this._borderColliders[2].Update(this._borderWidth, undefined);
+            this._borderColliders[3].Update(undefined, this._borderHeight);
         }
     }
 
 
     async Start() {
-        var ball = new BallController(document.getElementById("game-ball"));
-        ball.SetPosition(10, 10);
-        ball.SetRadius(10);
-        ball.SetMovementAngle(-Math.PI / 4);
-
-        var ball2 = new BallController(document.getElementById("game-ball2"));
-        ball2.SetPosition(50, 50);
-        ball2.SetRadius(15);
-        ball2.SetMovementAngle(Math.PI / 4);
-
         this.isRunning = true;
         while (this.isRunning) {
             await new Promise(resolve => setTimeout(resolve, this.gameStepTime));
 
             if (this.isPaused) continue;
 
-            if (this.balls_collision) {
-                ball.MakeMove(1, [...this._borderColliders, ball.collider, ball2.collider]);
-                ball2.MakeMove(1, [...this._borderColliders, ball.collider, ball2.collider]);
-            }
-            else {
-                ball.MakeMove(1, this._borderColliders);
-                ball2.MakeMove(1, this._borderColliders);
-            }
+
+            this._balls.forEach(ballToMove => {
+                ballToMove.MakeMove();
+
+                this._borderColliders.forEach(collider => ballToMove.TryCollide(collider));
+                if (this.balls_collision)
+                    this._balls.forEach(otherBall => ballToMove.TryCollide(otherBall.collider));
+            })
+
         }
     }
 }
@@ -364,7 +438,27 @@ function ToggleGameLoop() {
 }
 
 
+function MakeBall(colorRotation = 0) {
+    // Make element
+    let newBall = document.createElement("img");
+    newBall.src = "./ball.svg";
+    newBall.style.height = "0";
+    newBall.classList.add("game-object");
+
+    // set color
+    newBall.style.filter = `hue-rotate(${colorRotation}rad)`;
+
+    // Return
+    document.getElementById("game-field")
+        .appendChild(newBall);
+    return newBall;
+}
+
+
 window.addEventListener('DOMContentLoaded', function () {
     console.warn("AAAAA")
+    GAME.AddBall()
+    GAME.AddBall()
+
     GAME.Start();
 })

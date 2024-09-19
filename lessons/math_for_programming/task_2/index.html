@@ -9,13 +9,11 @@
 </head>
 
 <body>
-    <div id="game-borders" onmousemove="GAME.SetBorder(parseInt(this.style.width, 10), parseInt(this.style.height, 10));" style="width: 300px; height: 200px;">
-        <img class="game-object" id="game-ball" src="./ball.svg" style="height: 0;"/>
-        <img class="game-object" id="game-ball2" src="./ball2.svg" style="height: 0;"/>
-    </div>
+    <div id="game-field" onmousemove="GAME.SetBorder(parseInt(this.style.width, 10), parseInt(this.style.height, 10));" style="width: 300px; height: 200px;"></div>
     <div id="game-buttons">
-        <button class="game-button" onclick="GAME.isPaused = !GAME.isPaused;">BEGIN</button>
-        <button class="game-button" onclick="GAME.balls_collision = !GAME.balls_collision">TOGGLE BALLS COLLISION</button>
+        <button class="game-button" onclick="GAME.isPaused = !GAME.isPaused;">Begin</button>
+        <button class="game-button" onclick="GAME.balls_collision = !GAME.balls_collision">Toggle Ball's collistion</button>
+        <button class="game-button" onclick="GAME.AddBall()">Add ball</button>
     </div>
     <script src="./index.js"></script>
 </body>

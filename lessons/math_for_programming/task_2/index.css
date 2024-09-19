@@ -1,23 +1,35 @@
 .game-object {
     position: absolute;
 }
-#game-borders {
+#game-field {
     position: relative;
-    border: 1px dashed red;
+    border: 1px dashed gray;
+
+    background-color: lightgray;
 
     overflow:hidden;
     resize: both;
 }
 
 #game-buttons {
+    padding: 5px 0;
     display: flex;
+    flex-wrap: wrap;
     gap: 5px;
 }
 
 .game-button {
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
+    text-transform: uppercase;
 
     border: 1px solid gray;
     background-color: darkgray;
+
+    transition: 0.5s;
+
+    &:hover {
+        transition: 0.1s;
+        background-color: lightblue;
+    }
 }
