@@ -1,0 +1,48 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+input {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    border: 1px solid gray;
+    background-color: darkgray;
+
+    transition: 0.5s;
+
+    &[type=text] {
+        background-color: lightgray;
+    }
+
+    &[type=button] {
+        &:hover {
+            transition: 0.1s;
+            background-color: lightblue;
+        }
+    }
+}
+
+select {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    border: 1px solid gray;
+    background-color: darkgray;
+}
+
+.content-row {
+    display: flex;
+    gap: 5px;
+    margin: 5px;
+    width: 100%;
+    overflow: hidden;
+
+    & :last-child {
+        flex-grow: 1;
+    }
+}
